@@ -1,0 +1,93 @@
+﻿##定义初始变量
+#set($paramName = $!tool.firstLowerCase($!{tableInfo.name}))
+##设置回调
+$!callback.setFileName($tool.append($!{tableInfo.name}, "Controller.cs"))
+$!callback.setSavePath($tool.append($tableInfo.savePath,
+    "/src/DMPK.WebApi/Controllers"))
+
+using Caf.AspNetCore.Caf;
+using Caf.Core.DataModel.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using DMPK.Core.DBEntity;
+using DMPK.Core.$!{tableInfo.name}Core;
+using DMPK.Application.$!{tableInfo.name}Manage.Dto;
+using DMPK.Application.$!{tableInfo.name}Manage;
+
+namespace DMPK.WebApi.Controllers
+{
+    /// <summary>
+    /// 留言接口
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiController]
+    public class $!{tableInfo.name}Controller : CafController
+    {
+        private readonly I$!{tableInfo.name}AppService _messageAppService;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="MessageAppService"></param>
+        public $!{tableInfo.name}Controller(I$!{tableInfo.name}AppService MessageAppService)
+        {
+            _messageAppService = MessageAppService;
+        }
+
+        /// <summary>
+        /// 新增数据
+        /// </summary>
+        /// <param name="$!{paramName}Dto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<CafApiResponse> Insert([FromBody] $!{tableInfo.name}Dto $!{paramName}Dto)
+        {
+            return new CafApiResponse(await _messageAppService.Insert($!{paramName}Dto));
+        }
+
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="$!{paramName}Dto"></param>
+        /// <returns></returns>
+        [HttpPut]
+        public async Task<CafApiResponse> Update([FromBody] $!{tableInfo.name}Dto $!{paramName}Dto)
+        {
+            return new CafApiResponse(await _messageAppService.Update($!{paramName}Dto));
+        }
+
+        /// <summary>
+        /// 通过主键删除数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public async Task<CafApiResponse> DeleteById(long id)
+        {
+            return new CafApiResponse(await _messageAppService.DeleteById(id));
+        }
+
+        /// <summary>
+        ///  通过ID查询单条数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<CafApiResponse<$!{tableInfo.name}Dto>> QueryById(long id)
+        {
+            return new CafApiResponse<$!{tableInfo.name}Dto>(await _messageAppService.QueryById(id));
+        }
+
+        /// <summary>
+        /// 查询分页数据
+        /// </summary>
+        /// <param name="$!{paramName}Dto"></param>
+        /// <param name="paged"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public CafApiResponse<PagedResponse<$!{tableInfo.name}>> QueryPage([FromQuery] $!{tableInfo.name}Dto $!{paramName}Dto, [FromQuery] PagedRepuestInput paged)
+        {
+            return new CafApiResponse<PagedResponse<$!{tableInfo.name}>>(_messageAppService.QueryPage($!{paramName}Dto, paged));
+        }
+    }
+}

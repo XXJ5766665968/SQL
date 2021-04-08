@@ -1,0 +1,45 @@
+##定义初始变量
+#set($paramName = $!tool.firstLowerCase($!{tableInfo.name}))
+##设置回调
+$!callback.setFileName($tool.append("I",$!{tableInfo.name}, "DomainService.cs"))
+$!callback.setSavePath($tool.append($tableInfo.savePath,
+    "/src/DMPK.Core/$!{tableInfo.name}Core"))
+
+using System.Linq;
+using System.Threading.Tasks;
+using DMPK.Core.DBEntity;
+
+namespace DMPK.Core.$!{tableInfo.name}Core
+{
+    public interface I$!{tableInfo.name}DomainService {
+
+        /// <summary>
+        /// 通过ID查询单条数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<$!{tableInfo.name}> QueryById(long id);
+
+        /// <summary>
+        /// 新增数据
+        /// </summary>
+        /// <param name="$!{paramName}"></param>
+        /// <returns></returns>
+        Task<$!{tableInfo.name}> Insert($!{tableInfo.name} $!{paramName});
+
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="$!{paramName}"></param>
+        /// <returns></returns>
+        Task<$!{tableInfo.name}> Update($!{tableInfo.name} $!{paramName});
+
+        /// <summary>
+        /// 通过主键删除数据
+        /// </summary>
+        /// <param name="id"></param>
+        Task DeleteById(long id);
+
+        IQueryable<$!{tableInfo.name}> QueryAll();
+    }
+}

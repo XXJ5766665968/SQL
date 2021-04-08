@@ -1,0 +1,55 @@
+﻿##定义初始变量
+#set($paramName = $!tool.firstLowerCase($!{tableInfo.name}))
+##设置回调
+$!callback.setFileName($tool.append("I",$!{tableInfo.name}, "AppService.cs"))
+$!callback.setSavePath($tool.append($tableInfo.savePath,
+    "/src/DMPK.Application/$!{tableInfo.name}Manage"))
+    
+using Caf.Core.DataModel.Http;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using DMPK.Core.DBEntity;
+using DMPK.Application.$!{tableInfo.name}Manage.Dto;
+
+namespace DMPK.Application.$!{tableInfo.name}Manage
+{
+  public  interface I$!{tableInfo.name}AppService
+    {
+        /// <summary>
+        /// 通过ID查询单条数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<$!{tableInfo.name}Dto> QueryById(long id);
+
+        /// <summary>
+        /// 新增数据
+        /// </summary>
+        /// <param name="$!{paramName}Dto"></param>
+        /// <returns></returns>
+        Task<bool> Insert($!{tableInfo.name}Dto $!{paramName}Dto);
+
+        /// <summary>
+        /// 修改数据
+        /// </summary>
+        /// <param name="$!{paramName}Dto"></param>
+        /// <returns></returns>
+        Task<bool> Update($!{tableInfo.name}Dto $!{paramName}Dto);
+
+        /// <summary>
+        /// 通过主键删除数据
+        /// </summary>
+        /// <param name="id"></param>
+        Task<bool> DeleteById(long id);
+
+
+        /// <summary>
+        /// 查询分页数据
+        /// </summary>
+        /// <param name="$!{paramName}Dto"></param>
+        /// <param name="paged"></param>
+        /// <returns></returns>
+        PagedResponse<$!{tableInfo.name}> QueryPage($!{tableInfo.name}Dto $!{paramName}Dto, PagedRepuestInput paged);
+    }
+}

@@ -1,0 +1,54 @@
+##定义初始变量
+#set($paramName = $!tool.firstLowerCase($!{tableInfo.name}))
+##设置回调
+$!callback.setFileName($tool.append($tableName, $!{tableInfo.name}, "DomainService.cs"))
+$!callback.setSavePath($tool.append($tableInfo.savePath,
+    "/src/DMPK.Core/$!{tableInfo.name}Core"))
+    
+using Caf.Domain;
+using Caf.Domain.Repository;
+using System.Linq;
+using System.Threading.Tasks;
+using DMPK.Core.DBEntity;
+
+namespace DMPK.Core.$!{tableInfo.name}Core
+{
+    public class $!{tableInfo.name}DomainService : BaseCafDomainService, I$!{tableInfo.name}DomainService
+    {
+
+        private readonly ICafRepository<$!{tableInfo.name}> _$!{paramName}Repository;
+
+        public $!{tableInfo.name}DomainService(ICafRepository<$!{tableInfo.name}> $!{paramName}Repository)
+        {
+            _$!{paramName}Repository = $!{paramName}Repository;
+        }
+
+        public async Task<$!{tableInfo.name}> QueryById(long id)
+        {
+            return await this._$!{paramName}Repository.GetAsync(id);
+        }
+
+        public async Task<$!{tableInfo.name}> Insert($!{tableInfo.name} $!{paramName})
+        {
+            return await this._$!{paramName}Repository.InsertAsync($!{paramName}, true);
+        }
+
+        public async Task DeleteById(long id)
+        {
+            await this._$!{paramName}Repository.DeleteAsync(id);
+            this._$!{paramName}Repository.SaveChanges();
+        }
+
+        public IQueryable<$!{tableInfo.name}> QueryAll()
+        {
+            return this._$!{paramName}Repository.GetAllNoTracking();
+        }
+
+        public async Task<$!{tableInfo.name}> Update($!{tableInfo.name} $!{paramName})
+        {
+            var data= await this._$!{paramName}Repository.UpdateAsync($!{paramName});
+            this._$!{paramName}Repository.SaveChanges();
+            return data;
+        }
+    }
+}

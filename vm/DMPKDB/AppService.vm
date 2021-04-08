@@ -1,0 +1,90 @@
+﻿##定义初始变量
+#set($paramName = $!tool.firstLowerCase($!{tableInfo.name}))
+##设置回调
+$!callback.setFileName($tool.append($!{tableInfo.name}, "AppService.cs"))
+$!callback.setSavePath($tool.append($tableInfo.savePath,
+    "/src/DMPK.Application/$!{tableInfo.name}Manage"))
+    
+using Caf.Application;
+using Caf.Core.DataModel.Http;
+using System.Linq;
+using System.Threading.Tasks;
+
+using DMPK.Core;
+using DMPK.Core.DBEntity;
+using DMPK.Core.$!{tableInfo.name}Core;
+using DMPK.Application.$!{tableInfo.name}Manage.Dto;
+
+namespace DMPK.Application.$!{tableInfo.name}Manage
+{
+    public class $!{tableInfo.name}AppService : BaseCafApplication, I$!{tableInfo.name}AppService
+    {
+        private readonly I$!{tableInfo.name}DomainService _$!{paramName}DomainService;
+
+        public $!{tableInfo.name}AppService(I$!{tableInfo.name}DomainService $!{paramName}DomainService)
+        {
+            _$!{paramName}DomainService = $!{paramName}DomainService;
+        }
+
+        public  async Task<bool> DeleteById(long id)
+        {
+            if (!await CheckId(id))
+            {
+                return false;
+            }
+            await _$!{paramName}DomainService.DeleteById(id);
+            return true;
+        }
+
+        public async Task<bool> Insert($!{tableInfo.name}Dto $!{paramName}Dto)
+        {
+            $!{tableInfo.name} $!{paramName} = Mapper.Map<$!{tableInfo.name}>($!{paramName}Dto);
+            await _$!{paramName}DomainService.Insert($!{paramName});
+            return true;
+        }
+
+        public async Task<bool> Update($!{tableInfo.name}Dto $!{paramName}Dto)
+        {
+            $!{tableInfo.name} $!{paramName} = Mapper.Map<$!{tableInfo.name}>($!{paramName}Dto);
+            await _$!{paramName}DomainService.Update($!{paramName}); 
+            return true;
+        }
+
+        public async Task<$!{tableInfo.name}Dto> QueryById(long id)
+        {
+            var data=await _$!{paramName}DomainService.QueryById(id);
+            return Mapper.Map<$!{tableInfo.name}Dto>(data);
+        }
+
+        public async Task<bool> CheckId(long id)
+        {
+            var data = await _$!{paramName}DomainService.QueryById(id);
+            if (data == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public PagedResponse<$!{tableInfo.name}> QueryPage($!{tableInfo.name}Dto $!{paramName}Dto, PagedRepuestInput paged)
+        {
+            $!{tableInfo.name} $!{paramName}=Mapper.Map<$!{tableInfo.name}>($!{paramName}Dto);
+            var query = _$!{paramName}DomainService.QueryAll();
+            if ($!{paramName} != null)
+            {
+##                string name = $!{paramName}.Name;
+##                if (!string.IsNullOrWhiteSpace(name))
+##                {
+##                    query = query.Where(q => q.Name.Contains(name));
+##                }
+##                string company = $!{paramName}.Company;
+##                if (!string.IsNullOrWhiteSpace(company))
+##                {
+##                    query = query.Where(q => q.Company.Contains(company));
+##                }
+            }
+            query = query.OrderByDescending(s => s.CreationTime);
+            return PageUtil<$!{tableInfo.name}>.Page(paged, query);
+        }
+    }
+}
