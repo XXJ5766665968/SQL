@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="DMPKDB" uuid="edb292b6-9806-4905-83d7-18f60338e7f0">
-      <driver-ref>sqlserver.ms</driver-ref>
+    <data-source source="LOCAL" name="EH" uuid="ee12e57f-ab8c-496a-b00b-ee8c42718398">
+      <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
-      <jdbc-url>jdbc:sqlserver://122.112.247.92;database=DMPKDB</jdbc-url>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/Download/EH.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="EH-MISC" uuid="4cd814db-a172-43c6-8f0e-27e361c23d09">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/Download/MISC.db</jdbc-url>
     </data-source>
   </component>
 </project>
