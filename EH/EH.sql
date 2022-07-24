@@ -1,30 +1,10 @@
-/*
- 搜索&标签
-
-@0
-@1  -MISC
-@2  -全彩
-@3  -COS
-@4  -GIF
-@5  -IMG
-@6  -连载
-00
-MISC
-全彩
-COSPLAY
-IAMGE
-
- */
+/*Category: Upload( MISC:1 ;IMAGE SET:32 ;COSPLAY:64;)*/
 -- MYSQL中批量替换某个字段的部分数据
-UPDATE QUICK_SEARCH
-set name=replace(name, 'uploader', 'COS');
+UPDATE QUICK_SEARCH set name=replace(name, 'uploader',  'COS');
+-- DELETE  FROM DOWNLOAD_DIRNAME where GID !=0;
+UPDATE FILTER set Text=replace(TEXT, 'uploader:', '');
 
-UPDATE FILTER
-set Text=replace(TEXT, 'uploader:', '');
-
-/*
- 下載&收藏
- */
+--  下載&收藏
 UPDATE DOWNLOADS
 set STATE='3'
 where LABEL not like '%@%'
@@ -34,6 +14,7 @@ UPDATE DOWNLOADS
 set STATE='0'
 where LABEL like '%@%';
 
+--
 insert into DOWNLOADS(GID, TOKEN, TITLE, TITLE_JPN, THUMB,
                       CATEGORY, POSTED, UPLOADER, RATING,
                       SIMPLE_LANGUAGE, TIME, STATE, LEGACY,
@@ -98,8 +79,8 @@ select GID,
 from LOCAL_FAVORITES
 where Category = 64;
 
--- DELETE  FROM DOWNLOAD_DIRNAME where GID !=0;
 
--- Category: Upload( MISC:1 ;IMAGE SET:32 ;COSPLAY:64;)
+
+
 
 
