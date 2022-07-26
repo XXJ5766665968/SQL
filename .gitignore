@@ -2,3 +2,6 @@
 
 temp/.nomedia
 .user_id
+data/okhttp3-cookie.db
+data/hosts.db
+data/20*.db

@@ -1,83 +1,33 @@
-/*Category: Upload( MISC:1 ;IMAGE SET:32 ;COSPLAY:64;)*/
 -- MYSQL中批量替换某个字段的部分数据
 UPDATE QUICK_SEARCH set name=replace(name, 'uploader',  'COS');
 -- DELETE  FROM DOWNLOAD_DIRNAME where GID !=0;
 UPDATE FILTER set Text=replace(TEXT, 'uploader:', '');
-
---  下載&收藏
-UPDATE DOWNLOADS
-set STATE='3'
-where LABEL not like '%@%'
-   or LABEL is Null;
-
 UPDATE DOWNLOADS
 set STATE='0'
-where LABEL like '%@%';
-
+where LABEL  like '%#%'
+   or LABEL is Null;
+UPDATE DOWNLOADS
+set STATE='3'
+where LABEL not like '%#%';
 --
-insert into DOWNLOADS(GID, TOKEN, TITLE, TITLE_JPN, THUMB,
-                      CATEGORY, POSTED, UPLOADER, RATING,
-                      SIMPLE_LANGUAGE, TIME, STATE, LEGACY,
-                      LABEL)
-select GID,
-       TOKEN,
-       TITLE,
-       TITLE_JPN,
-       THUMB,
-       CATEGORY,
-       POSTED,
-       UPLOADER,
-       RATING,
-       SIMPLE_LANGUAGE,
-       TIME,
-       3,
-       0,
-       'MISC'
-from LOCAL_FAVORITES
-where Category = 1;
-
-
-insert into DOWNLOADS(GID, TOKEN, TITLE, TITLE_JPN, THUMB,
-                      CATEGORY, POSTED, UPLOADER, RATING,
-                      SIMPLE_LANGUAGE, TIME, STATE, LEGACY,
-                      LABEL)
-select GID,
-       TOKEN,
-       TITLE,
-       TITLE_JPN,
-       THUMB,
-       CATEGORY,
-       POSTED,
-       UPLOADER,
-       RATING,
-       SIMPLE_LANGUAGE,
-       TIME,
-       3,
-       0,
-       'IMAGESET'
-from LOCAL_FAVORITES
-where Category = 32;
-
-insert into DOWNLOADS(GID, TOKEN, TITLE, TITLE_JPN, THUMB,
-                      CATEGORY, POSTED, UPLOADER, RATING,
-                      SIMPLE_LANGUAGE, TIME, STATE, LEGACY,
-                      LABEL)
-select GID,
-       TOKEN,
-       TITLE,
-       TITLE_JPN,
-       THUMB,
-       CATEGORY,
-       POSTED,
-       UPLOADER,
-       RATING,
-       SIMPLE_LANGUAGE,
-       TIME,
-       3,
-       0,
-       'COSPLAY'
-from LOCAL_FAVORITES
-where Category = 64;
+select UPLOADER,count(UPLOADER) from DOWNLOADS group by
+                                                    UPLOADER;
+select Title,count() from DOWNLOADS
+group by
+    Title;
+SELECT SUM(CASE
+               WHEN CATEGORY = '1' THEN 1
+               ELSE 0 END) AS MISC_1,
+       SUM(CASE
+               WHEN CATEGORY = '32' THEN 1
+               ELSE 0 END) AS 图集_32,
+       SUM(CASE
+               WHEN CATEGORY = '64' THEN 1
+               ELSE 0 END) AS COS_64,
+       SUM(CASE
+               WHEN CATEGORY = '2' and '4' and '8' THEN 1
+               ELSE 0 END) AS 中文_2_4_8
+FROM HISTORY
 
 
 
